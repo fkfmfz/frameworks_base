@@ -205,4 +205,7 @@
     <!-- Screenrecord QS tile -->
     <string name="quick_settings_screenrecord">Screenrecord</string>
     <string name="quick_settings_screenrecord_on">Recording ...</string>
+
+    <!-- Kernel QS Tile -->
+    <string name="quick_settings_kernel_adiutor_label">Kernel Adiutor</string>
 </resources>

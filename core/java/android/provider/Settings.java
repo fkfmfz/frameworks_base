@@ -4284,6 +4284,12 @@ public final class Settings {
         public static final String REMOVE_TILE_SUMMARY = "remove_tile_summary";
 
         /**
+         * Override and forcefully disable the fullscreen keyboard
+         * @hide
+         */
+        public static final String DISABLE_FULLSCREEN_KEYBOARD = "disable_fullscreen_keyboard";
+
+        /**
          * Toast icon
          * @hide
          */

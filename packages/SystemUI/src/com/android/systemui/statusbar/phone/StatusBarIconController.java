@@ -93,6 +93,10 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
     private TextView mCarrierLabel;
     private TickerView mNotificationTicker;
 
+     // statusbar logo
+    private ImageView mSixLogoRight;
+    private ImageView mSixLogoLeft;
+
     private int mIconSize;
     private int mIconHPadding;
 
@@ -161,6 +165,8 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mDarkModeIconColorSingleTone = context.getColor(R.color.dark_mode_icon_color_single_tone);
         mLightModeIconColorSingleTone = context.getColor(R.color.light_mode_icon_color_single_tone);
         mHandler = new Handler();
+        mSixLogoRight = (ImageView) statusBar.findViewById(R.id.six_logo);
+        mSixLogoLeft = (ImageView) statusBar.findViewById(R.id.left_six_logo);
         loadDimens();
 
         mClock.setStatusBarIconController(this);
@@ -592,6 +598,13 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mCarrierLabel.setTextColor(getTint(mTintArea, mCarrierLabel, mIconTint));
         mBatteryLevelView.setTextColor(getTint(mTintArea, mBatteryLevelView, mIconTint));
         if (mNotificationTicker != null) mNotificationTicker.setDarkIntensity(mDarkIntensity);
+
+        if (Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_SIX_LOGO_COLOR, 0xFFFFFFFF,
+                UserHandle.USER_CURRENT) == 0xFFFFFFFF) {
+            mSixLogoRight.setImageTintList(ColorStateList.valueOf(mIconTint));
+            mSixLogoLeft.setImageTintList(ColorStateList.valueOf(mIconTint));
+        }
     }
 
     public void appTransitionPending() {

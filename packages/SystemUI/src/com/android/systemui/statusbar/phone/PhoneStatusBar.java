@@ -429,6 +429,13 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
     private boolean mDoubleTapVib;
 
+    // SiX logo
+    private boolean mSixLogo;
+    private int mSixLogoColor;
+    private ImageView mSixLogoRight;
+    private ImageView mSixLogoLeft;
+    private int mSixLogoStyle;
+
     private int mNavigationBarWindowState = WINDOW_STATE_SHOWING;
 
     private int mStatusBarHeaderHeight;
@@ -696,7 +703,15 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
                     Settings.System.ACCELEROMETER_ROTATION),
                     false, this, UserHandle.USER_ALL);
-
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_SIX_LOGO),
+                    false, this, UserHandle.USER_ALL);
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_SIX_LOGO_COLOR),
+                    false, this, UserHandle.USER_ALL);
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_SIX_LOGO_STYLE),
+                    false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -707,7 +722,18 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         public void update() {
             mStatusBarWindowManager.updateKeyguardScreenRotation();
-        }
+            ContentResolver resolver = mContext.getContentResolver();
+            mSixLogoStyle = Settings.System.getIntForUser(
+                    resolver, Settings.System.STATUS_BAR_SIX_LOGO_STYLE, 0,
+                    UserHandle.USER_CURRENT);
+            mSixLogo = Settings.System.getIntForUser(resolver,
+                    Settings.System.STATUS_BAR_SIX_LOGO, 0, mCurrentUserId) == 1;
+            mSixLogoColor = Settings.System.getIntForUser(resolver,
+                    Settings.System.STATUS_BAR_SIX_LOGO_COLOR, 0xFFFFFFFF, mCurrentUserId);
+            mSixLogoLeft = (ImageView) mStatusBarView.findViewById(R.id.left_six_logo);
+            mSixLogoRight = (ImageView) mStatusBarView.findViewById(R.id.six_logo);
+            showSixLogo(mSixLogo, mSixLogoColor, mSixLogoStyle);
+         }
     }
     private OmniSettingsObserver mOmniSettingsObserver = new OmniSettingsObserver(mHandler);
     private int mInteractingWindows;
@@ -4154,6 +4180,29 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 return deferred;
             }
         }, cancelAction, afterKeyguardGone);
+    }
+
+    public void showSixLogo(boolean show, int color, int style) {
+        if (mStatusBarView == null) return;
+        if (!show) {
+            mSixLogoRight.setVisibility(View.GONE);
+            mSixLogoLeft.setVisibility(View.GONE);
+            return;
+        }
+        if (color != 0xFFFFFFFF) {
+            mSixLogoRight.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            mSixLogoLeft.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        } else {
+            mSixLogoRight.clearColorFilter();
+            mSixLogoLeft.clearColorFilter();
+        }
+        if (style == 0) {
+            mSixLogoRight.setVisibility(View.GONE);
+            mSixLogoLeft.setVisibility(View.VISIBLE);
+        } else {
+            mSixLogoLeft.setVisibility(View.GONE);
+            mSixLogoRight.setVisibility(View.VISIBLE);
+        }
     }
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {

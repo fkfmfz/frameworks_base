@@ -131,6 +131,7 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
     private Drawable mCurrentBackground;
     private int mQsPanelOffsetNormal;
     private int mQsPanelOffsetHeader;
+    private boolean mDateTimeGroupCenter;
 
     public QuickStatusBarHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -259,6 +260,17 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
         }
     }
 
+    private void updateDateTimeCenter() {
+        mDateTimeGroupCenter = isDateTimeGroupCenter();
+        LayoutParams lp = (LayoutParams) mDateTimeAlarmGroup.getLayoutParams();
+        if (mDateTimeGroupCenter && !(hasSettingsIcon && hasEdit && hasMultiUserSwitch && hasExpandIndicator)) {
+            lp.addRule(CENTER_HORIZONTAL);
+        } else {
+            lp.addRule(CENTER_HORIZONTAL,0);
+        }
+        mDateTimeAlarmGroup.setLayoutParams(lp);
+    }
+
     @Override
     public int getCollapsedHeight() {
         return getHeight();
@@ -367,6 +379,7 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
     private void updateDateTimePosition() {
         mDateTimeAlarmGroup.setTranslationY(mShowEmergencyCallsOnly || mIsRoaming
                 ? mExpansionAmount * mDateTimeTranslation : 0);
+        updateDateTimeCenter();
     }
 
     private void updateListeners() {
@@ -679,5 +692,9 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
         LinearLayout.LayoutParams p = (LinearLayout.LayoutParams) mBackgroundImage.getLayoutParams();
         p.height = getExpandedHeight();
         mBackgroundImage.setLayoutParams(p);
+
+    public boolean isDateTimeGroupCenter() {
+        return Settings.System.getInt(mContext.getContentResolver(),
+            Settings.System.QS_DATE_TIME_CENTER, 1) == 1;
     }
 }

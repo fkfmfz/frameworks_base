@@ -3664,6 +3664,12 @@ public final class Settings {
         public static final String BATTERY_LIGHT_MEDIUM_COLOR = "battery_light_medium_color";
 
         /**
+         * Use AOSP grid style recents
+         * @hide
+         */
+        public static final String RECENTS_USE_GRID = "recents_use_grid";
+
+        /**
          * What color to use for the battery LED while charging - full
          * @hide
          */

@@ -108,7 +108,7 @@ public class BinderThreadPriorityTest extends AndroidTestCase {
         return null;  // Unknown
     }
 
-    public static String expectedSchedulerGroup(int prio) {
+    public static String expectedSchedulerGroup(int prio) {  // June merge
         return "/";
     }
 
